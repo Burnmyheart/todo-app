@@ -8,14 +8,8 @@ export const saveGroups = (groups: TodoGroup[]) => {
 
 export const loadGroups = (): TodoGroup[] => {
   const data = localStorage.getItem(GROUPS_KEY);
-  if (!data) return [];
-
-  const groups: TodoGroup[] = JSON.parse(data);
-
-  // Конвертируем строки обратно в Date
-  return groups.map(group => ({
-    ...group,
-    createdAt: new Date(group.createdAt),
-    tasks: group.tasks.map(task => ({ ...task, createdAt: new Date(task.createdAt) })),
-  }));
+  return data ? JSON.parse(data, (key, value) => {
+    if (key === "createdAt") return new Date(value);
+    return value;
+  }) : [];
 };

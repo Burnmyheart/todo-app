@@ -4,19 +4,16 @@ import TodoList from "./components/TodoList/TodoList";
 import { saveGroups, loadGroups } from "./utils/localStorage";
 import type { TodoGroup } from "./types";
 
-import {
-  ThemeProvider,
-  CssBaseline,
-  Paper,
-  IconButton,
-} from "@mui/material";
+import { ThemeProvider, CssBaseline, Paper, Container } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
+import Menu from "./components/menu/Menu";
 
 const App: React.FC = () => {
   const [groups, setGroups] = useState<TodoGroup[]>([]);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState<boolean>(() => {
+    const stored = localStorage.getItem("darkMode");
+    return stored ? stored === "true" : false;
+  });
 
   useEffect(() => {
     setGroups(loadGroups());
@@ -31,6 +28,10 @@ const App: React.FC = () => {
       mode: darkMode ? "dark" : "light",
     },
   });
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", String(darkMode));
+  }, [darkMode]);
 
   const addGroup = (title: string) => {
     const newGroup: TodoGroup = {
@@ -49,30 +50,13 @@ const App: React.FC = () => {
   };
 
   return (
-    <div style={{ padding: "20px", maxWidth: "900px", margin: "0 auto" }}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Paper
-          elevation={3}
-          sx={{
-            p: 3,
-            borderRadius: 3,
-            bgcolor: darkMode ? "background.default" : "#fff",
-          }}
-        >
-          {/* Тумблер */}
-          <div style={{ display: "flex", justifyContent: "flex-start" }}>
-            <IconButton onClick={() => setDarkMode((prev) => !prev)}>
-              {darkMode ? (
-                <DarkModeIcon sx={{ color: "#90caf9" }} />
-              ) : (
-                <LightModeIcon sx={{ color: "#fbc02d" }} />
-              )}
-            </IconButton>
-          </div>
-
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Menu darkMode={darkMode} onToggle={() => setDarkMode((prev) => !prev)} />
+      <Container maxWidth="md" sx={{ py: 4 }}>
+        <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
           <h1>Todo</h1>
-          <AddTodo onAdd={addGroup} />
+          <AddTodo onAdd={addGroup} placeholder="Новая группа..." />
           {groups.map((group) => (
             <TodoList
               key={group.id}
@@ -81,8 +65,8 @@ const App: React.FC = () => {
             />
           ))}
         </Paper>
-      </ThemeProvider>
-    </div>
+      </Container>
+    </ThemeProvider>
   );
 };
 

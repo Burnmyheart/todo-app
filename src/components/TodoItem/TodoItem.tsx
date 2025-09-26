@@ -33,17 +33,30 @@ interface TodoItemProps {
   onEdit: (id: number, text: string) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({ task, onToggle, onDelete, onEdit }) => {
+const TodoItem: React.FC<TodoItemProps> = ({
+  task,
+  onToggle,
+  onDelete,
+  onEdit,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
     <Container>
       <LeftSide>
-        <Checkbox checked={task.completed} onChange={() => onToggle(task.id)} color="primary" />
+        <Checkbox
+          checked={task.completed}
+          onChange={() => onToggle(task.id)}
+          color="primary"
+          inputProps={{ "aria-label": "Отметить как выполнено" }}
+        />
         {isEditing ? (
           <EditTodo
             text={task.text}
-            onSave={(text) => { onEdit(task.id, text); setIsEditing(false); }}
+            onSave={(text) => {
+              onEdit(task.id, text);
+              setIsEditing(false);
+            }}
             onCancel={() => setIsEditing(false)}
           />
         ) : (
@@ -53,10 +66,18 @@ const TodoItem: React.FC<TodoItemProps> = ({ task, onToggle, onDelete, onEdit })
 
       {!isEditing && (
         <>
-          <IconButton onClick={() => setIsEditing(true)} color="info">
+          <IconButton
+            onClick={() => setIsEditing(true)}
+            color="info"
+            aria-label="Редактировать задачу"
+          >
             <EditIcon />
           </IconButton>
-          <IconButton onClick={() => onDelete(task.id)} color="error">
+          <IconButton
+            onClick={() => onDelete(task.id)}
+            color="error"
+            aria-label="Удалить задачу"
+          >
             <DeleteIcon />
           </IconButton>
         </>
