@@ -1,69 +1,136 @@
 ﻿import React, { useState, useEffect } from "react";
 import AddTodo from "./components/AddTodo/AddTodo";
-import TodoList from "./components/TodoList/TodoList";
-import { saveGroups, loadGroups } from "./utils/localStorage";
-import type { TodoGroup } from "./types";
-
-import { ThemeProvider, CssBaseline, Paper, Container } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
+import TodoItem from "./components/TodoItem/TodoItem";
+import { CssBaseline, Container, Paper, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Menu from "./components/menu/Menu";
+import type { Task } from "./types";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+
+
+
+const TASKS_KEY = "tasks";
+
+const saveTasks = (tasks: Task[]) => {
+  localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
+};
+
+const loadTasks = (): Task[] => {
+  const raw = localStorage.getItem(TASKS_KEY);
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw).map((t: any) => ({
+      ...t,
+      createdAt: new Date(t.createdAt),
+      completed: !!t.completed,
+    }));
+    return parsed;
+  } catch {
+    return [];
+  }
+};
 
 const App: React.FC = () => {
-  const [groups, setGroups] = useState<TodoGroup[]>([]);
-  const [darkMode, setDarkMode] = useState<boolean>(() => {
+  const [tasks, setTasks] = useState<Task[]>(loadTasks());
+  const [darkMode, setDarkMode] = useState(() => {
     const stored = localStorage.getItem("darkMode");
     return stored ? stored === "true" : false;
   });
 
-  useEffect(() => {
-    setGroups(loadGroups());
-  }, []);
+  const [filter, setFilter] = useState<"all" | "completed" | "active">("all");
+  const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
 
   useEffect(() => {
-    saveGroups(groups);
-  }, [groups]);
+    saveTasks(tasks);
+  }, [tasks]);
 
   const theme = createTheme({
-    palette: {
-      mode: darkMode ? "dark" : "light",
-    },
+    palette: { mode: darkMode ? "dark" : "light" },
   });
 
-  useEffect(() => {
-    localStorage.setItem("darkMode", String(darkMode));
-  }, [darkMode]);
-
-  const addGroup = (title: string) => {
-    const newGroup: TodoGroup = {
-      id: Date.now(),
-      title,
-      tasks: [],
-      createdAt: new Date(),
-    };
-    setGroups((prev) => [...prev, newGroup]);
+  const addTask = (text: string) => {
+    const newTask: Task = { id: Date.now(), text, completed: false, createdAt: new Date() };
+    setTasks((prev) => [...prev, newTask]);
   };
 
-  const updateGroup = (updated: TodoGroup) => {
-    setGroups((prev) =>
-      prev.map((group) => (group.id === updated.id ? updated : group))
+  const toggleTask = (id: number) => {
+    setTasks((prev) =>
+      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
     );
   };
+
+  const editTask = (id: number, text: string) => {
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, text } : t)));
+  };
+
+  const deleteTask = (id: number) => {
+    setTasks((prev) => prev.filter((t) => t.id !== id));
+  };
+
+  // фильтрация и сортировка
+  const filteredTasks = tasks.filter((t) =>
+    filter === "completed" ? t.completed : filter === "active" ? !t.completed : true
+  );
+
+  const sortedTasks = [...filteredTasks].sort((a, b) =>
+    sortOrder === "new" ? b.createdAt.getTime() - a.createdAt.getTime() : a.createdAt.getTime() - b.createdAt.getTime()
+  );
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Menu darkMode={darkMode} onToggle={() => setDarkMode((prev) => !prev)} />
-      <Container maxWidth="md" sx={{ py: 4 }}>
+      <Container maxWidth="sm" sx={{ py: 4 }}>
         <Paper elevation={3} sx={{ p: 3, borderRadius: 3 }}>
           <h1>Todo</h1>
-          <AddTodo onAdd={addGroup} placeholder="Новая группа..." />
-          {groups.map((group) => (
-            <TodoList
-              key={group.id}
-              group={group}
-              onUpdateGroup={updateGroup}
+          <AddTodo onAdd={addTask} placeholder="Новая задача..." />
+
+          <Stack direction="row" spacing={2} sx={{ my: 2 }}>
+            <ToggleButtonGroup
+              value={filter}
+              exclusive
+              onChange={(_e, val) => val && setFilter(val)}
+              size="small"
+            >
+              <ToggleButton value="all">Все</ToggleButton>
+              <ToggleButton value="active">Неготовые</ToggleButton>
+              <ToggleButton value="completed">Готовые</ToggleButton>
+            </ToggleButtonGroup>
+
+            <ToggleButtonGroup
+              value={sortOrder}
+              exclusive
+              onChange={(_e, val) => val && setSortOrder(val)}
+              size="small"
+            >
+             <ToggleButtonGroup
+  value={sortOrder}
+  exclusive
+  onChange={(_e, val) => val && setSortOrder(val)}
+  size="small"
+>
+  <ToggleButton value="new" aria-label="Сортировать по новым">
+    <ArrowDownwardIcon />
+  </ToggleButton>
+  <ToggleButton value="old" aria-label="Сортировать по старым">
+    <ArrowUpwardIcon />
+  </ToggleButton>
+</ToggleButtonGroup>
+            </ToggleButtonGroup>
+          </Stack>
+
+          {sortedTasks.map((task) => (
+            <TodoItem
+              key={task.id}
+              task={task}
+              onToggle={toggleTask}
+              onDelete={deleteTask}
+              onEdit={editTask}
             />
           ))}
+
+          {sortedTasks.length === 0 && <p>Нет задач</p>}
         </Paper>
       </Container>
     </ThemeProvider>

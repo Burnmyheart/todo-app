@@ -4,10 +4,3 @@ export interface Task {
   completed: boolean;
   createdAt: Date;
 }
-
-export interface TodoGroup {
-  id: number;
-  title: string;
-  tasks: Task[];
-  createdAt: Date;
-}

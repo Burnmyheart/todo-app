@@ -21,9 +21,10 @@ const LeftSide = styled.div`
   flex: 1;
 `;
 
-const Text = styled.span<{ completed: boolean }>`
+const Text = styled.span<{ $completed: boolean }>`
   flex: 1;
-  text-decoration: ${({ completed }) => (completed ? "line-through" : "none")};
+  text-decoration: ${({ $completed }) =>
+    $completed ? "line-through" : "none"};
 `;
 
 interface TodoItemProps {
@@ -60,7 +61,7 @@ const TodoItem: React.FC<TodoItemProps> = ({
             onCancel={() => setIsEditing(false)}
           />
         ) : (
-          <Text completed={task.completed}>{task.text}</Text>
+          <Text $completed={task.completed}>{task.text}</Text>
         )}
       </LeftSide>
 

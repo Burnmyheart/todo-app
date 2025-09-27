@@ -1,15 +1,24 @@
-import type { TodoGroup } from "../types";
+import type { Task } from "../types";
 
-const GROUPS_KEY = "todoGroups";
+const TASKS_KEY = "tasks";
 
-export const saveGroups = (groups: TodoGroup[]) => {
-  localStorage.setItem(GROUPS_KEY, JSON.stringify(groups));
+export const saveTasks = (tasks: Task[]) => {
+  localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
 };
 
-export const loadGroups = (): TodoGroup[] => {
-  const data = localStorage.getItem(GROUPS_KEY);
-  return data ? JSON.parse(data, (key, value) => {
-    if (key === "createdAt") return new Date(value);
-    return value;
-  }) : [];
+export const loadTasks = (): Task[] => {
+  const data = localStorage.getItem(TASKS_KEY);
+  if (!data) return [];
+
+  try {
+    const parsed = JSON.parse(data).map((t: any) => ({
+      ...t,
+      createdAt: new Date(t.createdAt),
+      completed: !!t.completed,
+    }));
+    return parsed;
+  } catch (error) {
+    console.error("Error loading tasks:", error);
+    return [];
+  }
 };
