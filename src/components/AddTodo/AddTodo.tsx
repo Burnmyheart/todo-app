@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 
 interface AddTodoProps {
@@ -6,7 +6,7 @@ interface AddTodoProps {
   placeholder?: string;
 }
 
-const AddTodo: React.FC<AddTodoProps> = ({ onAdd, placeholder }) => {
+function AddTodo({ onAdd, placeholder }: AddTodoProps) {
   const [text, setText] = useState("");
   const [error, setError] = useState(false);
 
@@ -41,6 +41,6 @@ const AddTodo: React.FC<AddTodoProps> = ({ onAdd, placeholder }) => {
       </Button>
     </Stack>
   );
-};
+}
 
 export default AddTodo;

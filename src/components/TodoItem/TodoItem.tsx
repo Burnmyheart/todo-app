@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import  { useState } from "react";
 import type { Task } from "../../types";
 import { IconButton, Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,10 +21,10 @@ const LeftSide = styled.div`
   flex: 1;
 `;
 
-const Text = styled.span<{ $completed: boolean }>`
+const Text = styled.p<{ $completed: boolean }>`
   flex: 1;
-  text-decoration: ${({ $completed }) =>
-    $completed ? "line-through" : "none"};
+  margin: 0;
+  text-decoration: ${({ $completed }) => ($completed ? "line-through" : "none")};
 `;
 
 interface TodoItemProps {
@@ -34,12 +34,7 @@ interface TodoItemProps {
   onEdit: (id: number, text: string) => void;
 }
 
-const TodoItem: React.FC<TodoItemProps> = ({
-  task,
-  onToggle,
-  onDelete,
-  onEdit,
-}) => {
+ function TodoItem({ task, onToggle, onDelete, onEdit }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
@@ -49,7 +44,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
           checked={task.completed}
           onChange={() => onToggle(task.id)}
           color="primary"
-          inputProps={{ "aria-label": "Отметить как выполнено" }}
         />
         {isEditing ? (
           <EditTodo
@@ -85,6 +79,6 @@ const TodoItem: React.FC<TodoItemProps> = ({
       )}
     </Container>
   );
-};
+}
 
 export default TodoItem;

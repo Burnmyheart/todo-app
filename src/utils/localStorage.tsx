@@ -18,7 +18,7 @@ export const loadTasks = (): Task[] => {
     }));
     return parsed;
   } catch (error) {
-    console.error("Error loading tasks:", error);
+    console.error("Error ", error);
     return [];
   }
 };

@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import  { useState } from "react";
 import TodoItem from "../TodoItem/TodoItem";
 import AddTodo from "../AddTodo/AddTodo";
 import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
@@ -8,8 +8,7 @@ interface TaskListProps {
   tasks: Task[];
   onUpdateTasks: (tasks: Task[]) => void;
 }
-
-const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdateTasks }) => {
+ function TaskList({ tasks, onUpdateTasks }: TaskListProps) {
   const [filter, setFilter] = useState<"all" | "completed" | "active">("all");
   const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
 
@@ -62,6 +61,7 @@ const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdateTasks }) => {
       {sortedTasks.length === 0 && <p>Нет задач</p>}
     </>
   );
-};
+}
+
 
 export default TaskList;

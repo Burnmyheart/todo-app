@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import type { ReactNode } from "react";
 import { ThemeProvider as StyledProvider } from "styled-components";
 
 type ThemeType = "light" | "dark";
@@ -25,16 +26,16 @@ interface ThemeContextProps {
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
-export const useTheme = () => {
-  const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme must be used within ThemeProvider");
-  return ctx;
-};
+export const useTheme = () => useContext(ThemeContext)!;
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<ThemeType>(() => {
-    return (localStorage.getItem("theme") as ThemeType) || "light";
-  });
+interface ThemeProviderProps {
+  children: ReactNode;
+}
+
+export function ThemeProvider({ children }: ThemeProviderProps) {
+  const [theme, setTheme] = useState<ThemeType>(
+    (localStorage.getItem("theme") as ThemeType) || "light"
+  );
 
   useEffect(() => {
     localStorage.setItem("theme", theme);
@@ -49,4 +50,4 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       <StyledProvider theme={themes[theme]}>{children}</StyledProvider>
     </ThemeContext.Provider>
   );
-};
+}

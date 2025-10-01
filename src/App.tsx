@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+﻿import { useState, useEffect } from "react";
 import AddTodo from "./components/AddTodo/AddTodo";
 import TodoItem from "./components/TodoItem/TodoItem";
 import { CssBaseline, Container, Paper, Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
@@ -7,8 +7,6 @@ import Menu from "./components/menu/Menu";
 import type { Task } from "./types";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
-
-
 
 const TASKS_KEY = "tasks";
 
@@ -31,12 +29,16 @@ const loadTasks = (): Task[] => {
   }
 };
 
-const App: React.FC = () => {
+export default function App() {
   const [tasks, setTasks] = useState<Task[]>(loadTasks());
   const [darkMode, setDarkMode] = useState(() => {
     const stored = localStorage.getItem("darkMode");
     return stored ? stored === "true" : false;
   });
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", String(darkMode));
+  }, [darkMode]);
 
   const [filter, setFilter] = useState<"all" | "completed" | "active">("all");
   const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
@@ -55,9 +57,7 @@ const App: React.FC = () => {
   };
 
   const toggleTask = (id: number) => {
-    setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t))
-    );
+    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)));
   };
 
   const editTask = (id: number, text: string) => {
@@ -68,7 +68,6 @@ const App: React.FC = () => {
     setTasks((prev) => prev.filter((t) => t.id !== id));
   };
 
-  // фильтрация и сортировка
   const filteredTasks = tasks.filter((t) =>
     filter === "completed" ? t.completed : filter === "active" ? !t.completed : true
   );
@@ -104,19 +103,12 @@ const App: React.FC = () => {
               onChange={(_e, val) => val && setSortOrder(val)}
               size="small"
             >
-             <ToggleButtonGroup
-  value={sortOrder}
-  exclusive
-  onChange={(_e, val) => val && setSortOrder(val)}
-  size="small"
->
-  <ToggleButton value="new" aria-label="Сортировать по новым">
-    <ArrowDownwardIcon />
-  </ToggleButton>
-  <ToggleButton value="old" aria-label="Сортировать по старым">
-    <ArrowUpwardIcon />
-  </ToggleButton>
-</ToggleButtonGroup>
+              <ToggleButton value="new" aria-label="Сортировать по новым">
+                <ArrowDownwardIcon />
+              </ToggleButton>
+              <ToggleButton value="old" aria-label="Сортировать по старым">
+                <ArrowUpwardIcon />
+              </ToggleButton>
             </ToggleButtonGroup>
           </Stack>
 
@@ -135,6 +127,4 @@ const App: React.FC = () => {
       </Container>
     </ThemeProvider>
   );
-};
-
-export default App;
+}
