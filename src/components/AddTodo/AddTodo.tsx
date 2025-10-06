@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { TextField, Button, Stack } from "@mui/material";
 
 interface AddTodoProps {
@@ -10,7 +10,13 @@ function AddTodo({ onAdd, placeholder }: AddTodoProps) {
   const [text, setText] = useState("");
   const [error, setError] = useState(false);
 
-  const handleAdd = () => {
+
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setText(e.target.value);
+    setError(false); 
+  }, []);
+  
+  const handleAdd = useCallback(() => {
     if (text.trim() === "") {
       setError(true);
       return;
@@ -18,16 +24,13 @@ function AddTodo({ onAdd, placeholder }: AddTodoProps) {
     onAdd(text);
     setText("");
     setError(false);
-  };
+  }, [text, onAdd]);
 
   return (
     <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
       <TextField
         value={text}
-        onChange={(e) => {
-          setText(e.target.value);
-          setError(false);
-        }}
+        onChange={handleChange}
         size="small"
         placeholder={placeholder ?? "Новый элемент..."}
         aria-label={placeholder ?? "Добавить"}

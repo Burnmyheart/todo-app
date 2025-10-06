@@ -1,4 +1,4 @@
-﻿import  { useState } from "react";
+﻿import  { useCallback, useState } from "react";
 import TodoItem from "../TodoItem/TodoItem";
 import AddTodo from "../AddTodo/AddTodo";
 import { Stack, ToggleButton, ToggleButtonGroup } from "@mui/material";
@@ -8,26 +8,27 @@ interface TaskListProps {
   tasks: Task[];
   onUpdateTasks: (tasks: Task[]) => void;
 }
- function TaskList({ tasks, onUpdateTasks }: TaskListProps) {
+ function TodoList({ tasks, onUpdateTasks }: TaskListProps) {
   const [filter, setFilter] = useState("all");
   const [sortOrder, setSortOrder] = useState("new");
 
-  const addTask = (text: string) => {
+  const addTask = useCallback((text: string) => {
     const newTask: Task = { id: Date.now(), text, completed: false, createdAt: new Date() };
     onUpdateTasks([...tasks, newTask]);
-  };
+  }, [tasks, onUpdateTasks]);
 
-  const toggleTask = (id: number) => {
+  const toggleTask = useCallback((id: number) => {
     onUpdateTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
-  };
+  }, [tasks, onUpdateTasks]);
 
-  const editTask = (id: number, text: string) => {
+  const editTask = useCallback((id: number, text: string) => {
     onUpdateTasks(tasks.map(t => t.id === id ? { ...t, text } : t));
-  };
+  }, [tasks, onUpdateTasks]);
 
-  const deleteTask = (id: number) => {
+  const deleteTask = useCallback((id: number) => {
     onUpdateTasks(tasks.filter(t => t.id !== id));
-  };
+  }, [tasks, onUpdateTasks]);
+
 
   const filteredTasks = tasks.filter(t =>
     filter === "completed" ? t.completed : filter === "active" ? !t.completed : true
@@ -64,4 +65,4 @@ interface TaskListProps {
 }
 
 
-export default TaskList;
+export default TodoList;

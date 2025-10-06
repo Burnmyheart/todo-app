@@ -1,4 +1,4 @@
-﻿import React, { useState } from "react";
+﻿import { useState } from "react";
 import styled from "styled-components";
 
 interface EditTodoProps {
@@ -25,7 +25,7 @@ const Button = styled.button<{ disabled?: boolean }>`
 
 const EditTodo = ({ text, onSave, onCancel }: EditTodoProps) => {
   const [value, setValue] = useState(text);
-  
+
   const handleSave = () => {
     if (value.trim() === "") return;
     onSave(value.trim());
