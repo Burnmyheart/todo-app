@@ -11,7 +11,7 @@ function AddTodo({ onAdd, placeholder }: AddTodoProps) {
   const [error, setError] = useState(false);
 
   const handleAdd = () => {
-    if (!text.trim()) {
+    if (text.trim() === "") {
       setError(true);
       return;
     }
@@ -34,7 +34,6 @@ function AddTodo({ onAdd, placeholder }: AddTodoProps) {
         onKeyDown={(e) => e.key === "Enter" && handleAdd()}
         error={error}
         helperText={error ? "Поле не может быть пустым" : ""}
-        fullWidth
       />
       <Button variant="contained" onClick={handleAdd} aria-label="Добавить">
         +

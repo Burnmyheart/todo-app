@@ -23,9 +23,9 @@ const Button = styled.button<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (disabled ? 0.5 : 1)};
 `;
 
-const EditTodo: React.FC<EditTodoProps> = ({ text, onSave, onCancel }) => {
+const EditTodo = ({ text, onSave, onCancel }: EditTodoProps) => {
   const [value, setValue] = useState(text);
-
+  
   const handleSave = () => {
     if (value.trim() === "") return;
     onSave(value.trim());

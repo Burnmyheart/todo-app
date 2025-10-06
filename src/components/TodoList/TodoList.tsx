@@ -9,8 +9,8 @@ interface TaskListProps {
   onUpdateTasks: (tasks: Task[]) => void;
 }
  function TaskList({ tasks, onUpdateTasks }: TaskListProps) {
-  const [filter, setFilter] = useState<"all" | "completed" | "active">("all");
-  const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
+  const [filter, setFilter] = useState("all");
+  const [sortOrder, setSortOrder] = useState("new");
 
   const addTask = (text: string) => {
     const newTask: Task = { id: Date.now(), text, completed: false, createdAt: new Date() };

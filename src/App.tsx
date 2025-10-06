@@ -40,8 +40,8 @@ export default function App() {
     localStorage.setItem("darkMode", String(darkMode));
   }, [darkMode]);
 
-  const [filter, setFilter] = useState<"all" | "completed" | "active">("all");
-  const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
+  const [filter, setFilter] = useState("all");
+  const [sortOrder, setSortOrder] = useState("new");
 
   useEffect(() => {
     saveTasks(tasks);
