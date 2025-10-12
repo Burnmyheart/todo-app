@@ -31,7 +31,7 @@ interface TodoItemProps {
   task: Task;
   onToggle: (id: number) => void;
   onDelete: (id: number) => void;
-  onEdit: (id: number, text: string) => void;
+  onEdit: (id: number, text: string) => Promise<void>;
 }
 
  function TodoItem({ task, onToggle, onDelete, onEdit }: TodoItemProps) {
