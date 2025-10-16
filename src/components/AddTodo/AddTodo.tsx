@@ -10,12 +10,11 @@ function AddTodo({ onAdd, placeholder }: AddTodoProps) {
   const [text, setText] = useState("");
   const [error, setError] = useState(false);
 
-
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
-    setError(false); 
+    setError(false);
   }, []);
-  
+
   const handleAdd = useCallback(() => {
     if (text.trim() === "") {
       setError(true);

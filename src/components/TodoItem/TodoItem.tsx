@@ -1,5 +1,5 @@
-﻿import  { useState } from "react";
-import type { Task } from "../../types";
+﻿import { useState } from "react";
+import type { Todo } from "../../api/todos";
 import { IconButton, Checkbox } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
@@ -24,17 +24,18 @@ const LeftSide = styled.div`
 const Text = styled.p<{ $completed: boolean }>`
   flex: 1;
   margin: 0;
-  text-decoration: ${({ $completed }) => ($completed ? "line-through" : "none")};
+  text-decoration: ${({ $completed }) =>
+    $completed ? "line-through" : "none"};
 `;
 
 interface TodoItemProps {
-  task: Task;
+  task: Todo;
   onToggle: (id: number) => void;
   onDelete: (id: number) => void;
   onEdit: (id: number, text: string) => Promise<void>;
 }
 
- function TodoItem({ task, onToggle, onDelete, onEdit }: TodoItemProps) {
+function TodoItem({ task, onToggle, onDelete, onEdit }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
 
   return (

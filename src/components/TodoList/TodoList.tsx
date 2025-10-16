@@ -51,12 +51,12 @@ export default function TodoList() {
     dispatch(loadTodos());
   };
 
-  // Фильтруем задачи
+
   const filteredTasks = todos.filter(task =>
     filter === "completed" ? task.completed : filter === "active" ? !task.completed : true
   );
 
-  // Сортируем локально
+
   const sortedTasks = [...filteredTasks].sort((a, b) =>
     sortOrder === "new"
       ? new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()

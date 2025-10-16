@@ -42,9 +42,9 @@ app.get('/todos', (req, res) => {
 
   const startIndex = (page - 1) * limit;
   const endIndex = page * limit;
-  
+
   const paginatedTodos = todos.slice(startIndex, endIndex);
-  
+
   res.json({
     data: paginatedTodos,
     total: todos.length,
@@ -59,7 +59,7 @@ app.post('/todos', (req, res) => {
   if (!text) {
     return res.status(400).json({ error: 'Text is required' });
   }
-  
+
   const todos = readTodos();
   const newTodo = {
     id: Date.now(),
@@ -67,58 +67,58 @@ app.post('/todos', (req, res) => {
     completed: false,
     createdAt: new Date().toISOString()
   };
-  
+
   todos.unshift(newTodo);
   writeTodos(todos);
-  
+
   res.status(201).json(newTodo);
 });
 
 app.put('/todos/:id', (req, res) => {
   const { id } = req.params;
   const { text, completed } = req.body;
-  
+
   const todos = readTodos();
   const todoIndex = todos.findIndex(t => t.id === parseInt(id));
-  
+
   if (todoIndex === -1) {
     return res.status(404).json({ error: 'Todo not found' });
   }
-  
+
   if (text !== undefined) todos[todoIndex].text = text;
   if (completed !== undefined) todos[todoIndex].completed = completed;
-  
+
   writeTodos(todos);
   res.json(todos[todoIndex]);
 });
 
 app.delete('/todos/:id', (req, res) => {
   const { id } = req.params;
-  
+
   const todos = readTodos();
   const filteredTodos = todos.filter(t => t.id !== parseInt(id));
-  
+
   if (todos.length === filteredTodos.length) {
     return res.status(404).json({ error: 'Todo not found' });
   }
-  
+
   writeTodos(filteredTodos);
   res.status(204).send();
 });
 
 app.patch('/todos/:id/toggle', (req, res) => {
   const { id } = req.params;
-  
+
   const todos = readTodos();
   const todoIndex = todos.findIndex(t => t.id === parseInt(id));
-  
+
   if (todoIndex === -1) {
     return res.status(404).json({ error: 'Todo not found' });
   }
-  
+
   todos[todoIndex].completed = !todos[todoIndex].completed;
   writeTodos(todos);
-  
+
   res.json(todos[todoIndex]);
 });
 
