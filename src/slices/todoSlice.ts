@@ -13,7 +13,6 @@ interface TodoState {
   filter: TodoFilter;
 }
 
-// Начальное состояние
 const initialState: TodoState = {
   todos: [],
   loading: false,
@@ -28,13 +27,18 @@ const initialState: TodoState = {
 export const loadTodos = createAsyncThunk(
   "todos/loadTodos",
   async (_, { getState }) => {
-    const state = getState() as { todos: TodoState };
-    const { page, limit, filter } = state.todos;
-    const data = await fetchTodos(page, limit, filter);
-    return data; 
+    try {
+      const state = getState() as { todos: TodoState };
+      const { page, limit, filter } = state.todos;
+
+      const data = await fetchTodos(page, limit, filter);
+      return data;
+    } catch (err: any) {
+      console.error("Ошибка при загрузке todos:", err);
+      throw err;
+    }
   }
 );
-
 
 const todoSlice = createSlice({
   name: "todos",

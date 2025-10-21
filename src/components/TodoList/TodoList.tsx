@@ -29,28 +29,43 @@ export default function TodoList() {
 
   useEffect(() => {
     dispatch(loadTodos());
-  }, [dispatch, page, limit, filter]);
+  }, [page, limit, filter]);
 
   const handleAdd = async (text: string) => {
-    await createTodo(text);
-    dispatch(loadTodos());
+    try {
+      await createTodo(text);
+      dispatch(loadTodos());
+    } catch (error) {
+      console.error("Ошибка при добавлении задачи:", error);
+    }
   };
-
+  
   const handleToggle = async (id: number) => {
-    await toggleTodo(id);
-    dispatch(loadTodos());
+    try {
+      await toggleTodo(id);
+      dispatch(loadTodos());
+    } catch (error) {
+      console.error("Ошибка при переключении задачи:", error);
+    }
   };
-
+  
   const handleEdit = async (id: number, text: string) => {
-    await updateTodo(id, { text });
-    dispatch(loadTodos());
+    try {
+      await updateTodo(id, { text });
+      dispatch(loadTodos());
+    } catch (error) {
+      console.error("Ошибка при редактировании задачи:", error);
+    }
   };
-
+  
   const handleDelete = async (id: number) => {
-    await deleteTodo(id);
-    dispatch(loadTodos());
+    try {
+      await deleteTodo(id);
+      dispatch(loadTodos());
+    } catch (error) {
+      console.error("Ошибка при удалении задачи:", error);
+    }
   };
-
 
   const filteredTasks = todos.filter(task =>
     filter === "completed" ? task.completed : filter === "active" ? !task.completed : true
@@ -71,7 +86,7 @@ export default function TodoList() {
         <ToggleButtonGroup
           value={filter}
           exclusive
-          onChange={(_e, val) => val && dispatch(setFilter(val))}
+          onChange={(_, val) => val && dispatch(setFilter(val))}
           size="small"
         >
           <ToggleButton value="all">Все</ToggleButton>
@@ -82,7 +97,7 @@ export default function TodoList() {
         <ToggleButtonGroup
           value={sortOrder}
           exclusive
-          onChange={(_e, val) => val && setSortOrder(val)}
+          onChange={(_, val) => val && setSortOrder(val)}
           size="small"
         >
           <ToggleButton value="new" aria-label="Сортировать по новым"><ArrowDownwardIcon /></ToggleButton>
@@ -110,7 +125,7 @@ export default function TodoList() {
         <Pagination
           count={totalPages}
           page={page}
-          onChange={(_e, value) => dispatch(setPage(value))}
+          onChange={(_, value) => dispatch(setPage(value))}
         />
 
         <FormControl size="small">
