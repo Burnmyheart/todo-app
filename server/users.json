@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1761076655707,
+    "email": "daniilzhbirofficial@gmail.com",
+    "password": "$2a$10$SEBEuMp3dV5hnzjHMdg78eDJwVyI0mOTmIo3YgYRHBj1GzHn3yKOm",
+    "age": 27,
+    "createdAt": "2025-10-21T19:57:35.707Z"
+  },
+  {
+    "id": 1761819814065,
+    "email": "test@example.com",
+    "password": "$2a$10$bblZ5OqBBiF19Ld/CrFOou/DM8FkOpSw1Q2OyePSr3d6UlLHyPkhm",
+    "age": null,
+    "createdAt": "2025-10-30T10:23:34.065Z"
+  },
+  {
+    "id": 1761822461338,
+    "email": "redda@gmail.com",
+    "password": "$2a$10$R5MTof9RxjhfpXGWhXCTCuMiQh8X1PEjp6c.6qepSjlMyXbEs.ISu",
+    "age": 22,
+    "createdAt": "2025-10-30T11:07:41.338Z"
+  },
+  {
+    "id": 1761833312040,
+    "email": "e321@gmail.com",
+    "password": "$2a$10$HoQrt5OU8wSg3QxDRISBV.dLyzLL7IAU1Vd1jw7pQYp.dgqaM17Ra",
+    "age": 12,
+    "createdAt": "2025-10-30T14:08:32.040Z"
+  },
+  {
+    "id": 1761833341131,
+    "email": "13123@3321",
+    "password": "$2a$10$ZwAp2ireW3KCCdId.0J6juPBF74J05FGLJRzK4FFkuhWLQ93Kax.K",
+    "age": 312,
+    "createdAt": "2025-10-30T14:09:01.131Z"
+  },
+  {
+    "id": 1761833803479,
+    "email": "rewrew@gmai.com",
+    "password": "$2a$10$Fjv6DKOUflUEtKMOHmcCCeq1X2mgJACVOQKntWQes48hQChFepqv6",
+    "age": -30,
+    "createdAt": "2025-10-30T14:16:43.479Z"
+  }
+]

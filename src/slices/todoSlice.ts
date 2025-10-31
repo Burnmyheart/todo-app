@@ -1,7 +1,7 @@
-import { fetchTodos } from "../api/todos";
-import type { TodoFilter, Todo } from "../api/todos";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import type { TodoFilter, Todo } from "../api/todos";
+import { fetchTodos } from "../api/todos";
 
 interface TodoState {
   todos: Todo[];
@@ -23,19 +23,17 @@ const initialState: TodoState = {
   filter: "all",
 };
 
-
 export const loadTodos = createAsyncThunk(
   "todos/loadTodos",
-  async (_, { getState }) => {
+  async (
+    params: { page: number; limit: number; filter: TodoFilter; token: string },
+    { rejectWithValue }
+  ) => {
     try {
-      const state = getState() as { todos: TodoState };
-      const { page, limit, filter } = state.todos;
-
-      const data = await fetchTodos(page, limit, filter);
+      const data = await fetchTodos(params.page, params.limit, params.filter, params.token);
       return data;
     } catch (err: any) {
-      console.error("Ошибка при загрузке todos:", err);
-      throw err;
+      return rejectWithValue(err.message || "Ошибка при загрузке задач");
     }
   }
 );
@@ -52,7 +50,7 @@ const todoSlice = createSlice({
     },
     setFilter(state, action: PayloadAction<TodoFilter>) {
       state.filter = action.payload;
-      state.page = 1; 
+      state.page = 1;
     },
   },
   extraReducers: (builder) => {
@@ -61,14 +59,17 @@ const todoSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(loadTodos.fulfilled, (state, action) => {
-        state.loading = false;
-        state.todos = action.payload.data;
-        state.totalPages = action.payload.totalPages;
-      })
+      .addCase(
+        loadTodos.fulfilled,
+        (state, action: PayloadAction<{ data: Todo[]; totalPages: number }>) => {
+          state.loading = false;
+          state.todos = action.payload.data;
+          state.totalPages = action.payload.totalPages;
+        }
+      )
       .addCase(loadTodos.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || "Ошибка при загрузке";
+        state.error = action.payload as string;
       });
   },
 });

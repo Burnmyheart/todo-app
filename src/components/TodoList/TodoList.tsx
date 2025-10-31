@@ -24,44 +24,51 @@ export default function TodoList() {
     (state: RootState) => state.todos
   );
 
+  const token = useSelector((state: RootState) => state.auth.token); // токен для запросов
 
   const [sortOrder, setSortOrder] = useState<"new" | "old">("new");
 
   useEffect(() => {
-    dispatch(loadTodos());
-  }, [page, limit, filter]);
+    if (token) {
+      dispatch(loadTodos({ page, limit, filter, token }));
+    }
+  }, [page, limit, filter, token]);
 
   const handleAdd = async (text: string) => {
+    if (!token) return;
     try {
-      await createTodo(text);
-      dispatch(loadTodos());
+      await createTodo(text, token);
+      dispatch(loadTodos({ page, limit, filter, token }));
     } catch (error) {
       console.error("Ошибка при добавлении задачи:", error);
     }
   };
-  
+
   const handleToggle = async (id: number) => {
+    if (!token) return;
     try {
-      await toggleTodo(id);
-      dispatch(loadTodos());
+      await toggleTodo(id, token);
+      dispatch(loadTodos({ page, limit, filter, token }));
     } catch (error) {
       console.error("Ошибка при переключении задачи:", error);
     }
   };
-  
+
   const handleEdit = async (id: number, text: string) => {
+    if (!token) return;
     try {
-      await updateTodo(id, { text });
-      dispatch(loadTodos());
+      await updateTodo(id, { text }, token);
+      dispatch(loadTodos({ page, limit, filter, token }));
     } catch (error) {
       console.error("Ошибка при редактировании задачи:", error);
     }
   };
-  
+
   const handleDelete = async (id: number) => {
+    if (!token) return;
     try {
-      await deleteTodo(id);
-      dispatch(loadTodos());
+      await deleteTodo(id, token);
+      dispatch(loadTodos({ page, limit, filter, token }));
     } catch (error) {
       console.error("Ошибка при удалении задачи:", error);
     }
@@ -70,7 +77,6 @@ export default function TodoList() {
   const filteredTasks = todos.filter(task =>
     filter === "completed" ? task.completed : filter === "active" ? !task.completed : true
   );
-
 
   const sortedTasks = [...filteredTasks].sort((a, b) =>
     sortOrder === "new"
