@@ -1,39 +1,27 @@
 import { useState } from "react";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../../store";
+import { loginUser } from "../../slices/authSlice";
 
 export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
 
     try {
-      const response = await fetch("http://localhost:3001/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        alert("Ошибка: " + (errorData.message || "Вход не удался"));
-        return;
-      }
-
-      const data = await response.json();
-      console.log("Ответ сервера:", data);
-      
-      localStorage.setItem("accessToken", data.accessToken);
-
-      alert("Вход выполнен успешно!");
+      await dispatch(loginUser({ email, password })).unwrap();
       navigate("/");
-
     } catch (err) {
       console.error("Ошибка при входе:", err);
-      alert("Произошла ошибка при входе");
+      setError(typeof err === "string" ? err : "Произошла ошибка при входе");
     }
   };
 
@@ -48,15 +36,23 @@ export default function LoginForm() {
         label="Email"
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={(e) => {
+          setEmail(e.target.value);
+          if (error) setError(null);
+        }}
         required
       />
       <TextField
         label="Пароль"
         type="password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={(e) => {
+          setPassword(e.target.value);
+          if (error) setError(null);
+        }}
         required
+        error={Boolean(error)}
+        helperText={error ?? ""}
       />
       <Button type="submit" variant="contained">
         Войти

@@ -40,5 +40,19 @@
     "password": "$2a$10$Fjv6DKOUflUEtKMOHmcCCeq1X2mgJACVOQKntWQes48hQChFepqv6",
     "age": -30,
     "createdAt": "2025-10-30T14:16:43.479Z"
+  },
+  {
+    "id": 1761917232308,
+    "email": "daniil@gmail.com",
+    "password": "$2a$10$odNUYRQRf7UGhCrlEvaFBOBQdCm/Lu9Q8vEa96MM/KGwn7OngSFNi",
+    "age": 6,
+    "createdAt": "2025-10-31T13:27:12.308Z"
+  },
+  {
+    "id": 1761918185381,
+    "email": "daniilz@gmail.com",
+    "password": "$2a$10$KUUoPLC7ygI3zk3l8GBbLeatwhVJapltZoX4bhGImTnZ/gLZOmSz6",
+    "age": 27,
+    "createdAt": "2025-10-31T13:43:05.381Z"
   }
 ]

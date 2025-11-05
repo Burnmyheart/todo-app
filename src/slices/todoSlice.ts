@@ -47,6 +47,7 @@ const todoSlice = createSlice({
     },
     setLimit(state, action: PayloadAction<number>) {
       state.limit = action.payload;
+      state.page = 1;
     },
     setFilter(state, action: PayloadAction<TodoFilter>) {
       state.filter = action.payload;
